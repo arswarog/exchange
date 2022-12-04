@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
-import styles from './App.module.css'
+import styles from './App.module.scss'
 import classNames from 'classnames';
 
 function App() {
