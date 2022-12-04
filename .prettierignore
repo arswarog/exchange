@@ -1,0 +1,8 @@
+build
+coverage
+generated-docs
+website/.docusaurus
+public/qr-scanner-worker.min.js
+*.d.ts
+/.*.json
+/.vscode
