@@ -1,8 +1,16 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.app {
+  font-size: 24px;
+
+  display: flex;
+  align-items: center;
+}
+
+input, select {
+  font-size: 1em;
+}
+
+input {
+  width: 10em;
 }
 
 .logo {

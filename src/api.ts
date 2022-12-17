@@ -1,43 +1,61 @@
 import { BuyCurrency, CurrencySymbol, GetKnownCurrencies, IOptions, SellCurrency } from './types';
 
-const quotes = [];
-
 const baseUrl = 'https://functions.yandexcloud.net/d4el15n3josghdmf2630';
 
+function makeUrl(action: string, params: Record<string, any> = {}): string {
+    return baseUrl + '?' + new URLSearchParams({ ...params, action }).toString();
+}
+
 export const buyCurrency: BuyCurrency = async (
-    from: CurrencySymbol,
-    to: CurrencySymbol,
-    amount: number,
+    sourceCurrency: CurrencySymbol,
+    targetCurrency: CurrencySymbol,
+    targetAmount: number,
     options: IOptions = {},
 ): Promise<number> => {
-    return amount;
+    return fetch(
+        makeUrl('sell', {
+            sourceCurrency,
+            targetCurrency,
+            targetAmount,
+            ...options,
+        }),
+    ).then((res) => {
+        if (res.status === 200) {
+            return res.json();
+        }
+
+        throw new Error('Something wrong');
+    });
 };
 
 export const sellCurrency: SellCurrency = async (
-    from: CurrencySymbol,
-    to: CurrencySymbol,
-    amount: number,
+    sourceCurrency: CurrencySymbol,
+    targetCurrency: CurrencySymbol,
+    sourceAmount: number,
     options: IOptions = {},
 ): Promise<number> => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve(amount * 2);
-        }, Math.random() * 1000);
+    return fetch(
+        makeUrl('sell', {
+            sourceCurrency,
+            targetCurrency,
+            sourceAmount,
+            ...options,
+        }),
+    ).then((res) => {
+        if (res.status === 200) {
+            return res.json();
+        }
+
+        throw new Error('Something wrong');
     });
 };
 
 export const getKnownCurrencies: GetKnownCurrencies = () => {
-    return fetch(baseUrl + '?action=getCurrencies')
-        .then((res) => {
-            if (res.status === 200) {
-                return res.json();
-            }
+    return fetch(makeUrl('getCurrencies')).then((res) => {
+        if (res.status === 200) {
+            return res.json();
+        }
 
-            throw new Error('Something wrong');
-        })
-        .then((data) => {
-            console.log('getKnownCurrencies response: ', data);
-
-            return data;
-        });
+        throw new Error('Something wrong');
+    });
 };

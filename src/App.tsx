@@ -1,47 +1,107 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 
-import classNames from 'classnames';
+import { connect, MapDispatchToProps, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
 
+import * as actions from './actions';
+import { getKnownCurrencies } from './api';
 import styles from './App.module.scss';
-import reactLogo from './assets/react.svg';
+import { AmountInput } from './components/AmountInput';
+import { CurrencySelector } from './components/CurrencySelector';
+import { useCurrencies } from './hooks';
+import { IExchangeState } from './reducers';
+import { CurrencySymbol } from './types';
 
-function App() {
-    const [count, setCount] = useState(0);
+interface IProps {
+    sourceAmount: number;
+    sourceCurrency: CurrencySymbol;
+    targetAmount: number;
+    targetCurrency: CurrencySymbol;
+
+    setSourceAmountHandler(value: number): void;
+    setSourceCurrencyHandler(value: CurrencySymbol): void;
+    setTargetAmountHandler(value: number): void;
+    setTargetCurrencyHandler(value: CurrencySymbol): void;
+}
+
+function App({
+    sourceAmount,
+    sourceCurrency,
+    targetAmount,
+    targetCurrency,
+    setSourceAmountHandler,
+    setSourceCurrencyHandler,
+    setTargetAmountHandler,
+    setTargetCurrencyHandler,
+}: IProps) {
+    const dispatch = useDispatch();
+
+    /*
+    const sourceAmount = useSelector((state: IExchangeState) => state.sourceAmount);
+    const sourceCurrency = useSelector((state: IExchangeState) => state.sourceCurrency);
+    const targetAmount = useSelector((state: IExchangeState) => state.targetAmount);
+    const targetCurrency = useSelector((state: IExchangeState) => state.targetCurrency);
+
+    const setSourceAmountHandler = (value: number) => dispatch(actions.setSourceAmount(value));
+    const setSourceCurrencyHandler = (value: CurrencySymbol) => dispatch(actions.setSourceCurrency(value));
+    const setTargetAmountHandler = (value: number) => dispatch(actions.setTargetAmount(value));
+    const setTargetCurrencyHandler = (value: CurrencySymbol) => dispatch(actions.setTargetCurrency(value));
+*/
+
+    const currencies = useCurrencies();
+
+    useEffect(() => {
+        getKnownCurrencies().then((currencies) => {
+            dispatch(actions.setCurrencies(currencies));
+        });
+    }, []);
 
     return (
-        <div className="App">
+        <div className={styles.app}>
             <div>
-                <a
-                    href="https://vitejs.dev"
-                    target="_blank"
-                >
-                    <img
-                        src="/vite.svg"
-                        className={styles.logo}
-                        alt="Vite logo"
-                    />
-                </a>
-                <a
-                    href="https://reactjs.org"
-                    target="_blank"
-                >
-                    <img
-                        src={reactLogo}
-                        className={classNames(styles.logo, styles.react)}
-                        alt="React logo"
-                    />
-                </a>
+                <AmountInput
+                    amount={sourceAmount}
+                    onChange={setSourceAmountHandler}
+                />
+                <CurrencySelector
+                    list={currencies}
+                    currency={sourceCurrency}
+                    onChange={setSourceCurrencyHandler}
+                />
             </div>
-            <h1>Vite + React</h1>
-            <div className={styles.card}>
-                <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
+            {'=>'}
+            <div>
+                <AmountInput
+                    amount={targetAmount}
+                    onChange={setTargetAmountHandler}
+                />
+                <CurrencySelector
+                    list={currencies}
+                    currency={targetCurrency}
+                    onChange={setTargetCurrencyHandler}
+                />
             </div>
-            <p className={styles.readTheDocs}>Click on the Vite and React logos to learn more</p>
         </div>
     );
 }
 
-export default App;
+const mapStateToProps = (state: IExchangeState) => ({
+    sourceAmount: state.sourceAmount,
+    sourceCurrency: state.sourceCurrency,
+    targetAmount: state.targetAmount,
+    targetCurrency: state.targetCurrency,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            setSourceAmountHandler: actions.setSourceAmount,
+            setSourceCurrencyHandler: actions.setSourceCurrency,
+            setTargetAmountHandler: actions.setTargetAmount,
+            setTargetCurrencyHandler: actions.setTargetCurrency,
+        },
+        dispatch,
+    );
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
