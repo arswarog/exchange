@@ -6,7 +6,8 @@ function makeUrl(action: string, params: Record<string, any> = {}): string {
     return baseUrl + '?' + new URLSearchParams({ ...params, action }).toString();
 }
 
-export const buyCurrency: BuyCurrency = async (
+export const buyCurrency = async (
+    signal: AbortSignal,
     sourceCurrency: CurrencySymbol,
     targetCurrency: CurrencySymbol,
     targetAmount: number,
@@ -19,6 +20,7 @@ export const buyCurrency: BuyCurrency = async (
             targetAmount,
             ...options,
         }),
+        { signal },
     ).then((res) => {
         if (res.status === 200) {
             return res.json();
@@ -28,7 +30,8 @@ export const buyCurrency: BuyCurrency = async (
     });
 };
 
-export const sellCurrency: SellCurrency = async (
+export const sellCurrency = async (
+    signal: AbortSignal,
     sourceCurrency: CurrencySymbol,
     targetCurrency: CurrencySymbol,
     sourceAmount: number,
@@ -41,6 +44,7 @@ export const sellCurrency: SellCurrency = async (
             sourceAmount,
             ...options,
         }),
+        { signal },
     ).then((res) => {
         if (res.status === 200) {
             return res.json();
