@@ -1,7 +1,7 @@
 import { Middleware } from 'redux';
 
-import { setTargetAmount, SET_SOURCE_AMOUNT } from '../actions';
-import { sellCurrency } from '../api';
+import { SET_SOURCE_AMOUNT, SET_TARGET_AMOUNT, setSellResult, setBuyResult } from '../actions';
+import { buyCurrency, sellCurrency } from '../api';
 import { IExchangeState } from '../reducers';
 
 export const calculate: Middleware =
@@ -14,9 +14,15 @@ export const calculate: Middleware =
             const { sourceAmount, sourceCurrency, targetCurrency } = getState() as IExchangeState;
 
             sellCurrency(sourceCurrency, targetCurrency, sourceAmount)
-                .then((value) => dispatch(setTargetAmount(value)))
-                .catch(() => {
-                    console.log('ошибка продажи валюты');
-                });
+                .then((value) => dispatch(setSellResult(value)))
+                .catch(() => console.log('ошибка продажи валюты'));
+        }
+
+        if (action.type === SET_TARGET_AMOUNT) {
+            const { targetAmount, sourceCurrency, targetCurrency } = getState() as IExchangeState;
+
+            buyCurrency(sourceCurrency, targetCurrency, targetAmount)
+                .then((value) => dispatch(setBuyResult(value)))
+                .catch(() => console.log('ошибка покупки валюты'));
         }
     };

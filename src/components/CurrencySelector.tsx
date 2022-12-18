@@ -10,7 +10,10 @@ export function CurrencySelector({ list, currency, onChange }: IProps): JSX.Elem
     const changeHandler = (e: any) => onChange?.(e.target.value as CurrencySymbol);
 
     return (
-        <select onChange={changeHandler}>
+        <select
+            value={currency}
+            onChange={changeHandler}
+        >
             {list.map((item) => (
                 <option
                     key={item}

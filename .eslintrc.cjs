@@ -81,7 +81,7 @@ module.exports = {
                         group: 'internal',
                     },
                 ],
-                pathGroupsExcludedImportTypes: ['react'],
+                pathGroupsExcludedImportTypes: ["react"],
                 'newlines-between': 'always',
                 groups: ['builtin', 'external', 'internal', 'parent', ['sibling', 'index']],
                 alphabetize: {

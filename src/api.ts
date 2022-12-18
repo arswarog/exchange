@@ -13,7 +13,7 @@ export const buyCurrency: BuyCurrency = async (
     options: IOptions = {},
 ): Promise<number> => {
     return fetch(
-        makeUrl('sell', {
+        makeUrl('buy', {
             sourceCurrency,
             targetCurrency,
             targetAmount,

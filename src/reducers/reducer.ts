@@ -20,6 +20,8 @@ export function exchange(state: IExchangeState | undefined, action: AnyAction): 
             return {
                 ...state,
                 currencies: action.payload,
+                sourceCurrency: action.payload[0],
+                targetCurrency: action.payload[1],
             };
         case actions.SET_SOURCE_AMOUNT:
             return {
@@ -40,6 +42,16 @@ export function exchange(state: IExchangeState | undefined, action: AnyAction): 
             return {
                 ...state,
                 targetCurrency: action.payload,
+            };
+        case actions.SET_SELL_RESULT:
+            return {
+                ...state,
+                targetAmount: action.payload,
+            };
+        case actions.SET_BUY_RESULT:
+            return {
+                ...state,
+                sourceAmount: action.payload,
             };
     }
 
