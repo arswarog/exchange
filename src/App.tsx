@@ -10,7 +10,7 @@ import styles from './App.module.scss';
 import { AmountInput } from './components/AmountInput';
 import { CurrencySelector } from './components/CurrencySelector';
 import { useCurrencies } from './hooks';
-import { IExchangeState } from './reducers';
+import { ExchangeStatus, IExchangeState } from './reducers';
 import { CurrencySymbol } from './types';
 
 interface IProps {
@@ -49,6 +49,7 @@ function App({
     const setTargetCurrencyHandler = (value: CurrencySymbol) => dispatch(actions.setTargetCurrency(value));
 */
 
+    const status = useSelector<IExchangeState, ExchangeStatus>((state) => state.status);
     const currencies = useCurrencies();
 
     useEffect(() => {
@@ -61,6 +62,7 @@ function App({
         <div className={styles.app}>
             <div>
                 <AmountInput
+                    loading={status === ExchangeStatus.Loading || status === ExchangeStatus.LoadingSource}
                     amount={sourceAmount}
                     onChange={setSourceAmountHandler}
                 />
@@ -73,6 +75,7 @@ function App({
             {'=>'}
             <div>
                 <AmountInput
+                    loading={status === ExchangeStatus.Loading || status === ExchangeStatus.LoadingTarget}
                     amount={targetAmount}
                     onChange={setTargetAmountHandler}
                 />
