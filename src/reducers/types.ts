@@ -7,8 +7,14 @@ export enum ExchangeStatus {
     Ready,
 }
 
+export enum LastChanged {
+    Source,
+    Target,
+}
+
 export interface IExchangeState {
     status: ExchangeStatus;
+    lastChanged: LastChanged;
     currencies: CurrencySymbol[];
     sourceAmount: number;
     sourceCurrency: CurrencySymbol;

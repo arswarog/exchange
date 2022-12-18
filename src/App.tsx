@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-import { connect, MapDispatchToProps, useDispatch } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
