@@ -78,3 +78,21 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+input.loading {
+  color: #888888;
+  animation: input-loading infinite 2s linear;
+}
+
+
+@keyframes input-loading {
+  from {
+    color: #888888;
+  }
+  50% {
+    color: #dddddd;
+  }
+  from {
+    color: #888888;
+  }
+}
